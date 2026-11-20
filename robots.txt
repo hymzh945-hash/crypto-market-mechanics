@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cryptomarketmechanics.example/sitemap.xml
+Sitemap: https://hymzh945-hash.github.io/crypto-market-mechanics/sitemap.xml
