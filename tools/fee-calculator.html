@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Real Fee Cost Calculator — what volume-based fees take from a round trip</title>
+<meta name="description" content="Exchange fees are charged on volume, not on profit. Enter fee rate, position size, trades, and win rate to see the real drag, and where break-even sits.">
+<link rel="canonical" href="/tools/fee-calculator.html">
+<style>
+:root{--ink:#12151a;--muted:#5b6472;--line:#e3e7ee;--bg:#fbfcfe;--accent:#0b6a5f}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:660px;margin:0 auto;padding:0 22px}
+nav{padding:24px 0 0;font-size:14px}
+nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--accent)}
+h1{font-size:29px;line-height:1.25;margin:30px 0 10px;letter-spacing:-.4px}
+.lede{color:var(--muted);margin-bottom:26px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:20px}
+label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.hint{font-size:13px;color:var(--muted);margin-bottom:14px}
+input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:8px;font-size:16px;font-family:inherit;background:#fff}
+input:focus{outline:2px solid rgba(11,106,95,.25);border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.out{margin-top:20px;padding-top:18px;border-top:1px dashed var(--line)}
+.big{font-size:34px;font-weight:700;color:var(--accent);letter-spacing:-1px}
+.big small{font-size:15px;font-weight:500;color:var(--muted);letter-spacing:0}
+.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f3f8;font-size:15px}
+.row span:last-child{font-weight:600}
+.note{font-size:13.5px;color:var(--muted);line-height:1.6;margin-top:16px}
+.cta{background:#0b6a5f;color:#fff;border-radius:10px;padding:18px 22px;margin-top:26px}
+.cta a{color:#fff}
+footer{padding:34px 0 60px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><a href="/">← Crypto Market Mechanics</a></nav>
+<h1>Real fee cost calculator</h1>
+<p class="lede">Fees are charged on volume, not on profit. A 0.05% round trip on a position that moves 1% is not a rounding error — it is 10% of your edge, every time.</p>
+
+<div class="card">
+<div class="grid">
+<div>
+<label for="notional">Position size (USD)</label>
+<p class="hint">Notional per trade.</p>
+<input id="notional" type="number" value="10000" oninput="calc()">
+</div>
+<div>
+<label for="fee">Fee per side (%)</label>
+<p class="hint">Taker fee. Maker is usually lower.</p>
+<input id="fee" type="number" step="0.01" value="0.05" oninput="calc()">
+</div>
+<div>
+<label for="moves">Average move per trade (%)</label>
+<p class="hint">Your gross edge, before fees.</p>
+<input id="moves" type="number" step="0.01" value="1.2" oninput="calc()">
+</div>
+<div>
+<label for="trades">Trades per month</label>
+<p class="hint">Round trips.</p>
+<input id="trades" type="number" value="20" oninput="calc()">
+</div>
+</div>
+
+<div class="out">
+<div class="big" id="drag">0.100% <small>fee per round trip, as % of your move</small></div>
+<div class="row"><span>Fee cost per round trip</span><span id="per">$10.00</span></div>
+<div class="row"><span>Gross edge per trade</span><span id="gross">$120.00</span></div>
+<div class="row"><span>Net edge after fees</span><span id="net">$110.00</span></div>
+<div class="row"><span>Monthly fee bill</span><span id="month">$200.00</span></div>
+<div class="row"><span>Break-even move (fees only)</span><span id="be">0.10%</span></div>
+</div>
+<p class="note">The break-even number is the important one. If your average move is smaller than twice the fee, you are paying the exchange to move money around. This is why fee tiers are arithmetic rather than opinion — and why "I was right but I still lost" is usually a fee statement, not a market statement.</p>
+</div>
+
+<div class="cta">
+<p style="margin-bottom:8px"><strong>The rule that follows:</strong> size your trades so that the expected move is at least 5× the round-trip fee. Below that, the fee is the strategy.</p>
+<p style="font-size:14px;opacity:.9">This is one chapter of <em>Crypto Market Mechanics</em> — 28 chapters, 28 printable worksheets. <a href="/">Read the first 10 pages free</a>.</p>
+</div>
+<footer>Not investment advice. It is a description of the machine.</footer>
+</div>
+
+<script>
+function money(n){return '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function calc(){
+  var N=+document.getElementById('notional').value||0;
+  var F=+document.getElementById('fee').value||0;
+  var M=+document.getElementById('moves').value||0;
+  var T=+document.getElementById('trades').value||0;
+  var feeRT=F*2;
+  var cost=N*feeRT/100;
+  var gross=N*M/100;
+  var net=gross-cost;
+  var drag=M>0?(feeRT/M*100):0;
+  document.getElementById('drag').innerHTML=drag.toFixed(3)+'% <small>fee per round trip, as % of your move</small>';
+  document.getElementById('per').textContent=money(cost);
+  document.getElementById('gross').textContent=money(gross);
+  document.getElementById('net').textContent=money(net);
+  document.getElementById('month').textContent=money(cost*T);
+  document.getElementById('be').textContent=feeRT.toFixed(2)+'%';
+}
+calc();
+</script>
+</body>
+</html>
