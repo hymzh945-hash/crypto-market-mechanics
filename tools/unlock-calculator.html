@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Unlock Impact Calculator — price pressure from a supply unlock</title>
+<meta name="description" content="Free calculator: estimate the price impact of the next token unlock from supply, float, and unlock size, plus how many days ahead the market usually starts pricing it in.">
+<link rel="canonical" href="/tools/unlock-calculator.html">
+<style>
+:root{--ink:#12151a;--muted:#5b6472;--line:#e3e7ee;--bg:#fbfcfe;--accent:#0b6a5f}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:660px;margin:0 auto;padding:0 22px}
+nav{padding:24px 0 0;font-size:14px}
+nav a{color:var(--muted);text-decoration:none}nav a:<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Unlock Impact Calculator — price pressure from a supply unlock</title>
+<meta name="description" content="Free calculator: estimate the price impact of the next token unlock from supply, float, and unlock size, plus how many days ahead the market usually starts pricing it in.">
+<link rel="canonical" href="/tools/unlock-calculator.html">
+<style>
+:root{--ink:#12151a;--muted:#5b6472;--line:#e3e7ee;--bg:#fbfcfe;--accent:#0b6a5f}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:660px;margin:0 auto;padding:0 22px}
+nav{padding:24px 0 0;font-size:14px}
+nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--accent)}
+h1{font-size:29px;line-height:1.25;margin:30px 0 10px;letter-spacing:-.4px}
+.lede{color:var(--muted);margin-bottom:26px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:20px}
+label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.hint{font-size:13px;color:var(--muted);margin-bottom:16px}
+input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:8px;font-size:16px;font-family:inherit;background:#fff}
+input:focus{outline:2px solid rgba(11,106,95,.25);border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.out{margin-top:22px;padding-top:20px;border-top:1px dashed var(--line)}
+.big{font-size:34px;font-weight:700;color:var(--accent);letter-spacing:-1px}
+.big small{font-size:15px;font-weight:500;color:var(--muted);letter-spacing:0}
+.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f3f8;font-size:15px}
+.row span:last-child{font-weight:600}
+.note{font-size:13.5px;color:var(--muted);line-height:1.6;margin-top:16px}
+.cta{background:#0b6a5f;color:#fff;border-radius:10px;padding:18px 22px;margin-top:26px}
+.cta a{color:#fff}
+footer{padding:34px 0 60px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><a href="/">← Crypto Market Mechanics</a></nav>
+<h1>Token unlock impact calculator</h1>
+<p class="lede">Every unlock is a supply shock. This estimates the price the market has to clear at, and how early it typically starts pricing it in.</p>
+
+<div class="card">
+<div class="grid">
+<div>
+<label for="supply">Total supply (tokens)</label>
+<p class="hint">Fully diluted supply.</p>
+<input id="supply" type="number" value="1000000000" oninput="calc()">
+</div>
+<div>
+<label for="circulating">Circulating supply (tokens)</label>
+<p class="hint">Current float, not FDV.</p>
+<input id="circulating" type="number" value="100000000" oninput="calc()">
+</div>
+<div>
+<label for="unlock">Tokens unlocked at next event</label>
+<p class="hint">Absolute amount, or use the slider below.</p>
+<input id="unlock" type="number" value="20000000" oninput="calc()">
+</div>
+<div>
+<label for="days">Days until the unlock</label>
+<p class="hint">Used for the "already priced in" window.</p>
+<input id="days" type="number" value="30" oninput="calc()">
+</div>
+</div>
+
+<div class="out">
+<div class="big" id="impact">−16.7% <small>implied price change if demand is flat</small></div>
+<div class="row"><span>Float before / after</span><span id="float">10.0% → 12.0%</span></div>
+<div class="row"><span>New supply vs old supply</span><span id="ratio">+20.0%</span></div>
+<div class="row"><span>Price has to clear at</span><span id="clear">$0.833 per $1.00</span></div>
+<div class="row"><span>Market usually starts pricing this in</span><span id="window">14–26 days out</span></div>
+</div>
+<p class="note">Model: price scales with 1/supply, demand held flat. In practice the decline is larger and earlier, for two reasons: unlock recipients have a very low cost basis and will sell at almost any price, and the market prices the event in ahead of time rather than on the day.</p>
+</div>
+
+<div class="cta">
+<p style="margin-bottom:8px"><strong>The rule that follows:</strong> cut size two weeks before an unlock, and wait three days after it before deciding anything. Do not buy the dip on unlock day.</p>
+<p style="font-size:14px;opacity:.9">This is one chapter of <em>Crypto Market Mechanics</em> — 28 chapters, 28 printable worksheets. <a href="/">Read the first 10 pages free</a>.</p>
+</div>
+<footer>Not investment advice. It is a description of the machine.</footer>
+</div>
+
+<script>
+function fmt(n,d){return n.toLocaleString('en-US',{maximumFractionDigits:d===undefined?0:d})}
+function calc(){
+  var S=+document.getElementById('supply').value||0;
+  var C=+document.getElementById('circulating').value||0;
+  var U=+document.getElementById('unlock').value||0;
+  var D=+document.getElementById('days').value||0;
+  if(C<=0||U<=0){return}
+  var inc=U/C;
+  var newPrice=1/(1+inc);
+  var drop=(newPrice-1)*100;
+  document.getElementById('impact').innerHTML=(drop.toFixed(1)).replace('-','−')+'% <small>implied price change if demand is flat</small>';
+  var f0=S>0?(C/S*100):0, f1=S>0?((C+U)/S*100):0;
+  document.getElementById('float').textContent=f0.toFixed(1)+'% → '+f1.toFixed(1)+'%';
+  document.getElementById('ratio').textContent='+'+(inc*100).toFixed(1)+'%';
+  document.getElementById('clear').textContent='$'+newPrice.toFixed(3)+' per $1.00';
+  var lo=Math.max(0,Math.round(D*0.45)), hi=Math.max(1,Math.round(D*0.85));
+  document.getElementById('window').textContent=D>6?(lo+'–'+hi+' days out'):'now — the window has already opened';
+}
+calc();
+</script>
+</body>
+</html>
+  hover{color:var(--accent)}
+h1{font-size:29px;line-height:1.25;margin:30px 0 10px;letter-spacing:-.4px}
+.lede{color:var(--muted);margin-bottom:26px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:20px}
+label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.hint{font-size:13px;color:var(--muted);margin-bottom:16px}
+input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:8px;font-size:16px;font-family:inherit;background:#fff}
+input:focus{outline:2px solid rgba(11,106,95,.25);border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.out{margin-top:22px;padding-top:20px;border-top:1px dashed var(--line)}
+.big{font-size:34px;font-weight:700;color:var(--accent);letter-spacing:-1px}
+.big small{font-size:15px;font-weight:500;color:var(--muted);letter-spacing:0}
+.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f3f8;font-size:15px}
+.row span:last-child{font-weight:600}
+.note{font-size:13.5px;color:var(--muted);line-height:1.6;margin-top:16px}
+.cta{background:#0b6a5f;color:#fff;border-radius:10px;padding:18px 22px;margin-top:26px}
+.cta a{color:#fff}
+footer{padding:34px 0 60px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><a href="/">← Crypto Market Mechanics</a></nav>
+<h1>Token unlock impact calculator</h1>
+<p class="lede">Every unlock is a supply shock. This estimates the price the market has to clear at, and how early it typically starts pricing it in.</p>
+
+<div class="card">
+<div class="grid">
+<div>
+<label for="supply">Total supply (tokens)</label>
+<p class="hint">Fully diluted supply.</p>
+<input id="supply" type="number" value="1000000000" oninput="calc()">
+</div>
+<div>
+<label for="circulating">Circulating supply (tokens)</label>
+<p class="hint">Current float, not FDV.</p>
+<input id="circulating" type="number" value="100000000" oninput="calc()">
+</div>
+<div>
+<label for="unlock">Tokens unlocked at next event</label>
+<p class="hint">Absolute amount, or use the slider below.</p>
+<input id="unlock" type="number" value="20000000" oninput="calc()">
+</div>
+<div>
+<label for="days">Days until the unlock</label>
+<p class="hint">Used for the "already priced in" window.</p>
+<input id="days" type="number" value="30" oninput="calc()">
+</div>
+</div>
+
+<div class="out">
+<div class="big" id="impact">−16.7% <small>implied price change if demand is flat</small></div>
+<div class="row"><span>Float before / after</span><span id="float">10.0% → 12.0%</span></div>
+<div class="row"><span>New supply vs old supply</span><span id="ratio">+20.0%</span></div>
+<div class="row"><span>Price has to clear at</span><span id="clear">$0.833 per $1.00</span></div>
+<div class="row"><span>Market usually starts pricing this in</span><span id="window">14–26 days out</span></div>
+</div>
+<p class="note">Model: price scales with 1/supply, demand held flat. In practice the decline is larger and earlier, for two reasons: unlock recipients have a very low cost basis and will sell at almost any price, and the market prices the event in ahead of time rather than on the day.</p>
+</div>
+
+<div class="cta">
+<p style="margin-bottom:8px"><strong>The rule that follows:</strong> cut size two weeks before an unlock, and wait three days after it before deciding anything. Do not buy the dip on unlock day.</p>
+<p style="font-size:14px;opacity:.9">This is one chapter of <em>Crypto Market Mechanics</em> — 28 chapters, 28 printable worksheets. <a href="/">Read the first 10 pages free</a>.</p>
+</div>
+<footer>Not investment advice. It is a description of the machine.</footer>
+</div>
+
+<script>
+function fmt(n,d){return n.toLocaleString('en-US',{maximumFractionDigits:d===undefined?0:d})}
+function calc(){
+  var S=+document.getElementById('supply').value||0;
+  var C=+document.getElementById('circulating').value||0;
+  var U=+document.getElementById('unlock').value||0;
+  var D=+document.getElementById('days').value||0;
+  if(C<=0||U<=0){return}
+  var inc=U/C;
+  var newPrice=1/(1+inc);
+  var drop=(newPrice-1)*100;
+  document.getElementById('impact').innerHTML=(drop.toFixed(1)).replace('-','−')+'% <small>implied price change if demand is flat</small>';
+  var f0=S>0?(C/S*100):0, f1=S>0?((C+U)/S*100):0;
+  document.getElementById('float').textContent=f0.toFixed(1)+'% → '+f1.toFixed(1)+'%';
+  document.getElementById('ratio').textContent='+'+(inc*100).toFixed(1)+'%';
+  document.getElementById('clear').textContent='$'+newPrice.toFixed(3)+' per $1.00';
+  var lo=Math.max(0,Math.round(D*0.45)), hi=Math.max(1,Math.round(D*0.85));
+  document.getElementById('window').textContent=D>6?(lo+'–'+hi+' days out'):'now — the window has already opened';
+}
+calc();
+</script>
+</body>
+</html>
