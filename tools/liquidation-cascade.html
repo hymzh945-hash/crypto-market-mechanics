@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquidation Cascade Calculator — Crypto Market Mechanics</title>
+<meta name="description" content="Free liquidation cascade calculator: how much open interest sits near your price, what a forced unwind does to the mark, and how a 5% move becomes a 15% print.">
+<link rel="canonical" href="https://hymzh945-hash.github.io/crypto-market-mechanics/tools/liquidation-cascade.html">
+<style>
+:root{--fg:#16181d;--muted:#5b6472;--line:#e3e6ea;--bg:#fff;--accent:#0b6b57}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:26px;line-height:1.3;margin:0 0 8px}
+h2{font-size:18px;margin:32px 0 8px}
+p{color:var(--muted);margin:0 0 12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:20px;margin:24px 0}
+label{display:block;font-size:14px;color:var(--muted);margin:14px 0 6px}
+input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.out{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line)}
+.row b{font-variant-numeric:tabular-nums}
+.hint{font-size:13px;color:var(--muted);margin-top:10px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Liquidation Cascade Calculator</h1>
+<p>An 8% move that prints 25% is not manipulation. It is open interest converting into market orders. Estimate the cascade before it happens to you.</p>
+
+<div class="card">
+<div class="grid">
+<div><label>Mark price (USD)</label><input id="price" value="100" inputmode="decimal"></div>
+<div><label>Trigger distance (%)</label><input id="dist" value="8" inputmode="decimal"></div>
+<div><label>Open interest liquidated (USD)</label><input id="oi" value="1500000" inputmode="decimal"></div>
+<div><label>Liquidation leverage (x)</label><input id="lev" value="20" inputmode="decimal"></div>
+</div>
+<label>Order book depth per 1% (USD) — liquidity available at each step</label><input id="depth" value="60000" inputmode="decimal">
+<div class="out">
+<div class="row"><span>Trigger price</span><b id="tp">—</b></div>
+<div class="row"><span>Forced selling (position size)</span><b id="fs">—</b></div>
+<div class="row"><span>Slippage absorbed per 1% step</span><b id="sl">—</b></div>
+<div class="row"><span>Implied extra move from cascade</span><b id="em">—</b></div>
+<div class="row"><span>Total print from the initial move</span><b id="tt">—</b></div>
+</div>
+<p class="hint">Simplified: each liquidation dollar becomes a market order, and each 1% of move eats the depth shown above. Real books are thinner near a trigger than the average depth suggests.</p>
+</div>
+
+<h2>How the amplification works</h2>
+<p>Three prices do three different jobs: the last trade sets the index, the mark sets margin, and the book sets execution. When a leveraged position is liquidated, the exchange sends a market order, not a limit order. That order consumes the book, moves the mark, and triggers the next tier of liquidation — which is why the size of the initial move rarely matches the size of the print. The cascade ends only when the book refills or the liquidations run out.</p>
+
+<p><a href="../index.html">Back to the book</a> · <a href="funding-cost.html">Funding cost calculator</a> · <a href="fee-calculator.html">Fee drag calculator</a></p>
+</div>
+<script>
+const g=id=>document.getElementById(id);
+const num=(id,d)=>{const v=parseFloat(g(id).value);return Number.isFinite(v)?v:d};
+const money=x=>'$'+Math.round(x).toLocaleString('en-US');
+function calc(){
+  const p=num('price',100), dist=num('dist',8)/100, oi=num('oi',1500000), lev=num('lev',20), depth=num('depth',60000);
+  const trigger=p*(1-dist);
+  const forced=oi/lev;
+  const steps=Math.max(1,depth)>0?forced/depth:0;
+  const extra=p*steps/100*1; // each 1% of depth absorbs `depth` dollars
+  const totalMove=dist*100+(forced/depth);
+  g('tp').textContent='$'+trigger.toFixed(2);
+  g('fs').textContent=money(forced);
+  g('sl').textContent=money(depth)+' / 1%';
+  g('em').textContent=(steps).toFixed(2)+'%';
+  g('tt').textContent=(dist*100+steps).toFixed(2)+'%';
+}
+['price','dist','oi','lev','depth'].forEach(id=>g(id).addEventListener('input',calc));
+calc();
+</script>
+</body>
+</html>

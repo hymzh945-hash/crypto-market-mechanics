@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perpetual Funding Cost Calculator — Crypto Market Mechanics</title>
+<meta name="description" content="Free perpetual funding cost calculator: see what 8-hour funding actually costs a position per day, per month and per round trip, and where it breaks even.">
+<link rel="canonical" href="https://hymzh945-hash.github.io/crypto-market-mechanics/tools/funding-cost.html">
+<style>
+:root{--fg:#16181d;--muted:#5b6472;--line:#e3e6ea;--bg:#fff;--accent:#0b6b57}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:26px;line-height:1.3;margin:0 0 8px}
+h2{font-size:18px;margin:32px 0 8px}
+p{color:var(--muted);margin:0 0 12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:20px;margin:24px 0}
+label{display:block;font-size:14px;color:var(--muted);margin:14px 0 6px}
+input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.out{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line)}
+.row b{font-variant-numeric:tabular-nums}
+.hint{font-size:13px;color:var(--muted);margin-top:10px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Perpetual Funding Cost Calculator</h1>
+<p>Funding is charged every 8 hours and it compounds against you quietly. Put in a position and see the real carry before you size it.</p>
+
+<div class="card">
+<div class="grid">
+<div><label>Position notional (USD)</label><input id="notional" value="10000" inputmode="decimal"></div>
+<div><label>Funding rate per 8h (%)</label><input id="rate" value="0.01" inputmode="decimal"></div>
+</div>
+<label>Holding period (days)</label><input id="days" value="30" inputmode="decimal">
+<label>Expected edge per round trip (%) — optional</label><input id="edge" value="0.15" inputmode="decimal">
+<div class="out">
+<div class="row"><span>Cost per funding interval</span><b id="c8">—</b></div>
+<div class="row"><span>Cost per day</span><b id="cd">—</b></div>
+<div class="row"><span>Cost over holding period</span><b id="ct">—</b></div>
+<div class="row"><span>As % of notional</span><b id="cp">—</b></div>
+<div class="row"><span>Days until edge is eaten</span><b id="cb">—</b></div>
+</div>
+<p class="hint">Positive funding: longs pay shorts. Set a negative rate to model being paid.</p>
+</div>
+
+<h2>Why this matters</h2>
+<p>0.01% per 8 hours looks like nothing. It is 0.03% a day, about 0.9% a month, and on a strategy that trades a 0.15% edge it can turn a positive expectancy into a negative one within two weeks. Funding is the only cost in crypto that scales with time instead of volume, which is why a position that is right on direction can still lose.</p>
+
+<p><a href="../index.html">Back to the book</a> · <a href="unlock-calculator.html">Unlock supply calculator</a> · <a href="fee-calculator.html">Fee drag calculator</a></p>
+</div>
+<script>
+const g=id=>document.getElementById(id);
+const num=(id,d)=>{const v=parseFloat(g(id).value);return Number.isFinite(v)?v:d};
+const money=x=>'$'+Math.round(x).toLocaleString('en-US');
+function calc(){
+  const n=num('notional',10000), r=num('rate',0.01)/100, d=num('days',30), e=num('edge',0.15)/100;
+  const per8=n*r, perDay=per8*3, total=perDay*d;
+  g('c8').textContent=money(per8);
+  g('cd').textContent=money(perDay);
+  g('ct').textContent=money(total);
+  g('cp').textContent=(total/n*100).toFixed(2)+'%';
+  g('cb').textContent = e>0 && perDay>0 ? Math.floor((n*e)/perDay)+' days' : '—';
+}
+['notional','rate','days','edge'].forEach(id=>g(id).addEventListener('input',calc));
+calc();
+</script>
+</body>
+</html>
